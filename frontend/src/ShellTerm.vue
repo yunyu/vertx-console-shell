@@ -10,9 +10,22 @@
     width: 100%;
     height: 100%;
     background-color: #000;
-    
+
     .terminal {
         font-family: Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* Chrome and Safari scrollbar styling
+    workaround for https://github.com/sourcelair/xterm.js/issues/762 */
+    .xterm-viewport {
+        &::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            background-color: #000;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #4d4d4d;
+        }
     }
 }
 </style>
