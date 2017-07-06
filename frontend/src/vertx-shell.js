@@ -20,7 +20,7 @@ export default function (url, options, element) {
         var term = new Terminal(termOptions);
         socket.onmessage = function (event) {
             if (event.type === 'message') {
-                console.log(typeof event.data);
+                // console.log(typeof event.data);
                 if (typeof event.data !== 'string') {
                     var reader = new FileReader();
                     reader.onloadend = function () {
@@ -35,6 +35,7 @@ export default function (url, options, element) {
         socket.onclose = function () {
             socket.onmessage = null;
             socket.onclose = null;
+            // console.log('Destroying term')
             term.destroy();
         };
         term.on('data', function (data) {
@@ -42,4 +43,10 @@ export default function (url, options, element) {
         });
         term.open(element);
     };
+
+    return {
+        close: function () {
+            socket.close();
+        }
+    }
 };

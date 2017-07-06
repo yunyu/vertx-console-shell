@@ -54,11 +54,14 @@ export default {
     name: 'Shell',
     mounted() {
         this.$nextTick(() => {
-            new VertxTerm(window.location.pathname + '/shellproxy', {
+            this.term = new VertxTerm(window.location.pathname + '/shellproxy', {
                 cols: 80,
                 rows: 24
             }, this.$refs.terminal);
         });
+    },
+    beforeDestroy() {
+        this.term.close();
     }
 }
 </script>
