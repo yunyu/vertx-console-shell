@@ -1,3 +1,5 @@
+package in.yunyul.vertx.console.shell;
+
 import in.yunyul.vertx.console.base.ConsolePage;
 import io.vertx.core.Vertx;
 import io.vertx.ext.shell.term.HttpTermOptions;
