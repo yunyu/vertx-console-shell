@@ -73,6 +73,11 @@ module.exports = {
   performance: {
     hints: false
   },
+  resolve: {
+    alias: {
+      'term.js': 'term.js/src/term.js'
+    }
+  }
   // devtool: '#eval-source-map'
 }
 
