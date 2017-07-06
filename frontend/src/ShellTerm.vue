@@ -24,7 +24,11 @@
             background-color: #000;
         }
         &::-webkit-scrollbar-thumb {
-            background: #4d4d4d;
+            background: #222;
+            border-radius: 4px;
+            &:hover, &:active {
+                background: #444;
+            }
         }
     }
 }
