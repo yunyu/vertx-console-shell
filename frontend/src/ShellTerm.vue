@@ -9,7 +9,8 @@
 .terminal-wrapper {
     width: 100%;
     height: 100%;
-
+    background-color: #000;
+    
     .terminal {
         font-family: Menlo, Monaco, Consolas, monospace;
     }
