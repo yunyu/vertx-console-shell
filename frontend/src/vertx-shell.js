@@ -1,7 +1,7 @@
 import SockJS from 'sockjs-client';
 import Terminal from 'term.js';
 
-export default function (url, options) {
+export default function (url, options, element) {
     options = options || {};
     var cols = options.cols || 80;
     var rows = options.rows || 24;
@@ -40,6 +40,6 @@ export default function (url, options) {
         term.on('data', function (data) {
             socket.send(JSON.stringify({ action: 'read', data: data }));
         });
-        term.open(document.body);
+        term.open(element);
     };
 };
