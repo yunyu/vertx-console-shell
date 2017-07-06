@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "sockjs-client": "^1.1.4",
-    "term.js": "^0.0.7"
+    "vue-resize-directive": "^1.0.0",
+    "xterm": "^2.8.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
