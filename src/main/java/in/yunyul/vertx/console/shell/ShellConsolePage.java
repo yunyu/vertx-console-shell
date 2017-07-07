@@ -1,38 +1,29 @@
 package in.yunyul.vertx.console.shell;
 
 import in.yunyul.vertx.console.base.ConsolePage;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.ext.shell.ShellServer;
+import io.vertx.ext.shell.command.CommandRegistry;
 import io.vertx.ext.shell.command.CommandResolver;
+import io.vertx.ext.shell.spi.CommandResolverFactory;
 import io.vertx.ext.shell.term.HttpTermOptions;
 import io.vertx.ext.shell.term.TermServer;
 import io.vertx.ext.web.Router;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("unused")
 public class ShellConsolePage implements ConsolePage {
-    private List<CommandResolver> resolvers;
-
     public static ShellConsolePage create() {
-        return new ShellConsolePage(null);
-    }
-
-    public static ShellConsolePage create(CommandResolver... resolvers) {
-        return new ShellConsolePage(Arrays.asList(resolvers));
-    }
-
-    public static ShellConsolePage create(List<CommandResolver> resolvers) {
-        return new ShellConsolePage(resolvers);
-    }
-
-    public ShellConsolePage(List<CommandResolver> resolvers) {
-        this.resolvers = resolvers;
+        return new ShellConsolePage();
     }
 
     @Override
     public void mount(Vertx vertx, Router router, String basePath) {
+        CommandRegistry registry = CommandRegistry.getShared(vertx);
+
         ShellServer server = ShellServer.create(vertx);
         TermServer termServer = TermServer.createHttpTermServer(vertx, router,
                 new HttpTermOptions()
@@ -42,14 +33,45 @@ public class ShellConsolePage implements ConsolePage {
                         .setShellHtmlResource(null)
                         .setAuthOptions(null) // use registry auth
         );
-        server.registerTermServer(termServer);
-        server.registerCommandResolver(CommandResolver.baseCommands(vertx));
-        if (resolvers != null) {
-            for (CommandResolver resolver : resolvers) {
-                server.registerCommandResolver(resolver);
+
+        // Adapted from ShellServiceImpl
+        List<CommandResolverFactory> factories = lookupResolverFactories();
+        // When providers are registered we start the server
+        AtomicInteger count = new AtomicInteger(factories.size());
+        List<CommandResolver> resolvers = new ArrayList<>();
+        resolvers.add(registry);
+        for (CommandResolverFactory factory : factories) {
+            factory.resolver(vertx, ar -> {
+                if (ar.succeeded()) {
+                    resolvers.add(ar.result());
+                }
+                if (count.decrementAndGet() == 0) {
+                    server.registerTermServer(termServer);
+                    resolvers.forEach(server::registerCommandResolver);
+                    server.listen();
+                }
+            });
+        }
+    }
+
+    private List<CommandResolverFactory> lookupResolverFactories() {
+        // Lookup providers
+        ServiceLoader<CommandResolverFactory> loader = ServiceLoader.load(CommandResolverFactory.class);
+        Iterator<CommandResolverFactory> it = loader.iterator();
+        List<CommandResolverFactory> factories = new ArrayList<>();
+        factories.add((vertx, handler) -> handler.handle(Future.succeededFuture(CommandResolver.baseCommands(vertx))));
+        while (true) {
+            try {
+                if (it.hasNext()) {
+                    CommandResolverFactory factory = it.next();
+                    factories.add(factory);
+                } else {
+                    break;
+                }
+            } catch (Exception e) {
             }
         }
-        server.listen();
+        return factories;
     }
 
     @Override
