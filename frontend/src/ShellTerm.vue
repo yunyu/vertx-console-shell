@@ -10,6 +10,7 @@
     width: 100%;
     height: 100%;
     background-color: #000;
+    overflow: hidden;
 
     .terminal {
         font-family: Menlo, Monaco, Consolas, monospace;
@@ -19,14 +20,14 @@
     workaround for https://github.com/sourcelair/xterm.js/issues/762 */
     .xterm-viewport {
         &::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-            background-color: #000;
+            width: 6px;
+            height: 6px;
+            background-color: transparent;
         }
         &::-webkit-scrollbar-thumb {
             background: #222;
-            border-radius: 4px;
-            &:hover, &:active {
+            &:hover,
+            &:active {
                 background: #444;
             }
         }
