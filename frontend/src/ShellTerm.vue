@@ -44,6 +44,9 @@ export default {
     directives: {
         resize,
     },
+    beforeMount() {
+        document.body.style.background = '#000';
+    },
     mounted() {
         this.$nextTick(() => {
             this.term = new VertxTerm(window.location.pathname + '/shellproxy', {}, this.$refs.terminal);
@@ -51,6 +54,7 @@ export default {
     },
     beforeDestroy() {
         this.term.close();
+        document.body.style.background = '';
     },
     methods: {
         onResize(e) {
