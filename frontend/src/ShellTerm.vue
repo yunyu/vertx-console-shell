@@ -37,13 +37,9 @@
 
 <script>
 import VertxTerm from './vertx-shell.js';
-import resize from 'vue-resize-directive';
 
 export default {
     name: 'Shell',
-    directives: {
-        resize,
-    },
     beforeMount() {
         document.body.style.background = '#000';
     },
