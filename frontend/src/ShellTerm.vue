@@ -31,6 +31,10 @@
                 background: #444;
             }
         }
+
+        &::-webkit-scrollbar-corner {
+            background: #000;
+        }
     }
 }
 </style>
