@@ -4,8 +4,8 @@ var webpack = require('webpack')
 module.exports = {
   entry: './src/entry.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    path: path.resolve(__dirname, './dist/consoleroot/js'),
+    publicPath: '/dist/consoleroot/js/',
     filename: 'shell.js'
   },
   module: {
