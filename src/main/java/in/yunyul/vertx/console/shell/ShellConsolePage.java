@@ -16,6 +16,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("unused")
 public class ShellConsolePage implements ConsolePage {
+    /**
+     * Creates the shell console page
+     *
+     * @return the console page
+     */
     public static ShellConsolePage create() {
         return new ShellConsolePage();
     }
